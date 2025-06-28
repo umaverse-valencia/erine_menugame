@@ -134,3 +134,17 @@ body {
     border-color: rgba(255, 255, 255, 0.5);
     transform: scale(1.03); /* Sedikit membesar */
 }
+
+/* ... (kode CSS Anda yang sudah ada) ... */
+
+/* GAYA UNTUK KREDIT DI BAGIAN BAWAH */
+.footer-credit {
+    position: fixed; /* Membuat posisinya tetap di layar */
+    bottom: 10px;    /* Jarak 10px dari bawah */
+    width: 100%;     /* Lebar penuh */
+    text-align: center; /* Teks di tengah */
+    font-size: 0.8rem;  /* Ukuran font kecil */
+    color: white;       /* Warna teks putih */
+    opacity: 0.6;       /* Sedikit transparan agar tidak terlalu mencolok */
+    pointer-events: none; /* Agar tidak bisa diklik atau mengganggu elemen lain */
+}
