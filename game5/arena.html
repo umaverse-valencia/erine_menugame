@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Erine's Spotlight Arena</title>
+    <link rel="stylesheet" href="style_arena.css">
+</head>
+<body>
+
+    <div id="start-screen">
+        <img src="title_arena.png" alt="Erine's Spotlight Arena" class="start-screen-title">
+        <div class="high-score-container">
+            <p>🏆 HIGH SCORE 🏆</p>
+            <span id="start-high-score">0</span>
+        </div>
+        <button id="start-button">Mulai</button>
+    </div>
+
+    <div id="game-screen" class="hidden">
+        <canvas id="gameCanvas"></canvas>
+    </div>
+
+    <div id="game-over-screen" class="hidden overlay">
+        <div class="panel">
+            <h2 class="game-over-title">WOTSCHARGE GAGAL! 💔</h2>
+            <p class="game-over-subtitle">Energi dukunganmu untuk Erine telah habis.</p>
+            <p id="new-high-score-msg" class="hidden">🎉 NEW HIGH SCORE! 🎉</p>
+            <div class="score-summary">
+                <div class="final-score-container">
+                    <p>SKOR AKHIR</p>
+                    <span id="final-score">0</span>
+                </div>
+                <div class="final-score-container high-score-panel">
+                    <p>HIGH SCORE</p>
+                    <span id="game-over-high-score">0</span>
+                </div>
+            </div>
+            <div class="button-container">
+                <button id="restart-button">Coba Lagi</button>
+                <button id="menu-button" class="menu-button">Kembali ke Menu</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="script_arena.js"></script>
+</body>
+</html>

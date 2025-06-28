@@ -1,0 +1,106 @@
+/* KODE CSS FINAL - TANPA PROGRESS BAR */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@700&display=swap');
+
+body {
+    margin: 0;
+    overflow: hidden;
+    background-color: #1a1a1a;
+    font-family: 'Poppins', sans-serif;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+.hidden { display: none !important; }
+
+/* --- GAYA LAYAR PEMUATAN --- */
+#loading-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(135deg, #2c3e50, #3498db); display: flex; flex-direction: column; justify-content: center; align-items: center; color: white; text-align: center; padding: 20px; box-sizing: border-box; z-index: 1000; transition: opacity 0.5s ease-out; }
+.loader-icon { width: 80px; height: auto; margin-bottom: 20px; animation: spin 3s linear infinite; }
+.quote-container { max-width: 80%; margin-bottom: 30px; }
+#quote-text { font-size: 1.2rem; font-style: italic; opacity: 0.9; min-height: 50px; }
+.quote-author { display: block; margin-top: 10px; font-weight: bold; color: #f1c40f; }
+
+/* Gaya untuk angka persentase */
+#loading-percentage { 
+    margin-top: 20px;
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: white;
+}
+
+/* KODE BARU YANG LEBIH KEREN */
+#start-message {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-family: 'Poppins', sans-serif; /* Font keren yang sudah kita impor */
+    font-size: 2.5rem; /* Sedikit lebih besar */
+    font-weight: 700;
+    color: #ffffff;
+
+    /* Efek menyala menggunakan beberapa lapis bayangan teks */
+    text-shadow: 
+        0 0 7px #fff,
+        0 0 10px #fff,
+        0 0 21px #fff,
+        0 0 42px #0fa, /* Warna glow (biru-hijau) */
+        0 0 82px #0fa,
+        0 0 92px #0fa,
+        0 0 102px #0fa,
+        0 0 151px #0fa;
+
+    pointer-events: none;
+    animation: pulse-glow 2s infinite alternate; /* Animasi berdenyut */
+}
+
+/* Keyframes untuk animasi denyut glow */
+@keyframes pulse-glow {
+    from {
+        text-shadow: 
+            0 0 5px #fff,
+            0 0 8px #fff,
+            0 0 18px #fff,
+            0 0 38px #0fa,
+            0 0 70px #0fa;
+    }
+    to {
+        text-shadow: 
+            0 0 7px #fff,
+            0 0 10px #fff,
+            0 0 21px #fff,
+            0 0 42px #0fa,
+            0 0 82px #0fa,
+            0 0 92px #0fa;
+    }
+}
+
+@keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+
+/* --- GAYA GAME (Tidak Berubah) --- */
+#game-container { position: relative; width: 100vw; height: 100vh; }
+#game-canvas { display: block; width: 100%; height: 100%; }
+#start-message { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: white; font-size: 2rem; font-weight: bold; text-shadow: 2px 2px 4px #000; pointer-events: none; }
+.ui-box { position: absolute; top: 15px; background-color: rgba(0, 0, 0, 0.4); border-radius: 10px; padding: 10px 15px; display: flex; align-items: center; gap: 8px; color: white; font-size: 1.5rem; font-weight: bold; text-shadow: 1px 1px 2px #000; border: 1px solid rgba(255, 255, 255, 0.2); }
+#score-container { left: 15px; }
+#high-score-container { right: 15px; }
+.ui-icon { font-size: 1.2rem; }
+#game-over-screen { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.7); display: flex; justify-content: center; align-items: center; z-index: 50; opacity: 0; animation: fadeIn 0.3s ease-out forwards; }
+.game-over-panel { background: linear-gradient(145deg, #4c4c4c, #2c2c2c); color: white; padding: 25px; border-radius: 20px; text-align: center; border: 2px solid #555; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5); transform: scale(0.8); animation: zoomIn 0.4s 0.1s ease-out forwards; width: 90%; max-width: 380px; box-sizing: border-box; }
+.game-over-panel > * { opacity: 0; transform: translateY(10px); animation: slideUpFadeIn 0.5s ease-out forwards; }
+.game-over-title { font-size: 2rem; color: #ff6b6b; animation-delay: 0.3s; }
+.game-over-subtitle { font-size: 1rem; opacity: 0.8; margin: -5px 0 15px 0; animation-delay: 0.4s; }
+#new-high-score-msg { color: #f1c40f; font-weight: bold; animation: pulse 1.5s infinite, slideUpFadeIn 0.5s ease-out 0.5s forwards; }
+.final-score-box { background: rgba(0, 0, 0, 0.3); border-radius: 10px; padding: 10px 20px; margin: 15px 0; animation-delay: 0.6s; }
+.final-score-box p { margin: 0; opacity: 0.7; font-size: 0.8rem; }
+.final-score-box span { font-size: 2.5rem; font-weight: bold; }
+.restart-msg { font-size: 1rem; opacity: 0.7; margin-top: 15px; animation-delay: 0.7s; }
+#menu-button { margin-top: 15px; padding: 10px 25px; font-size: 1rem; font-weight: bold; color: #333; background-color: #f0f0f0; border: none; border-radius: 8px; cursor: pointer; transition: background-color 0.2s; animation-delay: 0.8s; }
+.control-button { position: absolute; bottom: 0; width: 50%; height: 100%; display: flex; justify-content: center; align-items: flex-end; padding-bottom: 40px; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+#left-control { left: 0; }
+#right-control { right: 0; }
+.button-text { font-size: 1.5rem; font-weight: bold; color: white; opacity: 0.3; text-shadow: 1px 1px 2px black; }
+@keyframes fadeIn { to { opacity: 1; } }
+@keyframes zoomIn { to { transform: scale(1); } }
+@keyframes slideUpFadeIn { to { opacity: 1; transform: translateY(0); } }
+@keyframes pulse { 0% { transform: scale(1); text-shadow: 0 0 5px #f1c40f; } 50% { transform: scale(1.05); text-shadow: 0 0 20px #f1c40f; } 100% { transform: scale(1); text-shadow: 0 0 5px #f1c40f; } }

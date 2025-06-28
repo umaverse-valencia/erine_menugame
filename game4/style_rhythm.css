@@ -1,0 +1,124 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@700&display=swap');
+
+body {
+    margin: 0;
+    font-family: 'Poppins', sans-serif;
+    background: #111;
+    color: white;
+    overflow: hidden;
+}
+
+.hidden {
+    display: none !important;
+}
+
+/* Layar Pembuka */
+#start-screen {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background: #1a1a2e;
+    padding: 20px;
+}
+
+.title-image {
+    width: 90%;
+    max-width: 500px;
+    margin-bottom: 40px;
+}
+
+#start-button {
+    background: #e94560;
+    color: white;
+    border: none;
+    padding: 15px 50px;
+    border-radius: 50px;
+    font-size: 1.5rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+
+#start-button:hover {
+    transform: scale(1.05);
+}
+
+/* Layar Game */
+#game-screen {
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+}
+
+canvas {
+    display: block;
+    width: 100%;
+    height: 100%;
+}
+
+#score-display {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    font-size: 1.5rem;
+    font-weight: bold;
+    text-shadow: 2px 2px 4px #000;
+}
+
+/* ================================================= */
+/* GAYA UNTUK LAYAR GAME OVER / HASIL (INI YANG PENTING) */
+/* ================================================= */
+#gameOverScreen {
+    position: fixed; /* Menutupi seluruh layar */
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.8); /* Latar belakang gelap transparan */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000; /* Pastikan posisinya paling atas */
+}
+
+.game-over-box {
+    background-color: #16213e;
+    padding: 30px 40px;
+    border-radius: 15px;
+    text-align: center;
+    color: white;
+    border: 2px solid #e94560;
+    width: 90%;
+    max-width: 400px;
+}
+
+.game-over-box h2 {
+    font-size: 2.5rem;
+    margin-bottom: 10px;
+}
+
+.game-over-box p {
+    font-size: 1.2rem;
+    margin-bottom: 25px;
+}
+
+#gameOverScreen .back-button, #gameOverScreen #restartButton {
+    background-color: #f1c40f;
+    color: #2c3e50;
+    border: none;
+    padding: 10px 20px;
+    font-size: 1rem;
+    border-radius: 5px;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-block;
+    margin-top: 10px;
+    font-weight: bold;
+}
+
+#gameOverScreen .back-button {
+    background-color: #95a5a6;
+    margin-left: 10px;
+}

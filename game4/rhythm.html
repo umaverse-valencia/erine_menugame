@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Erine's Melody Tap</title>
+    <link rel="stylesheet" href="style_rhythm.css">
+</head>
+<body>
+    <div id="start-screen">
+        <img src="title_rhythm.png" alt="Erine's Melody Tap - A Game by UmaValencia" class="title-image">
+        <button id="start-button">Mulai</button>
+    </div>
+
+    <div id="game-screen" class="hidden">
+        <canvas id="gameCanvas"></canvas>
+        <div id="score-display">SKOR: 0</div>
+    </div>
+
+    <div id="gameOverScreen" class="hidden">
+        <div class="game-over-box">
+            <h2 id="gameOverTitle">Lagu Selesai!</h2>
+            <p>Skor Akhirmu: <span id="finalScore">0</span></p>
+            <button id="restartButton">Main Lagi</button>
+            <a href="../index.html" class="back-button">Kembali ke Menu</a>
+        </div>
+    </div>
+
+    <script src="script_rhythm.js"></script>
+</body>
+</html>

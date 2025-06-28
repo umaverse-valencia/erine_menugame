@@ -1,0 +1,136 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;600;700&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+    color: white;
+    overflow: hidden; /* Mencegah scroll bar muncul */
+}
+
+/* Latar Belakang Video */
+.video-background {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -2;
+}
+
+#erineVideo {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* Memastikan video menutupi layar tanpa distorsi */
+}
+
+/* Overlay untuk membuat teks lebih mudah dibaca */
+.menu-container::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.6); /* Overlay hitam transparan */
+    z-index: -1;
+}
+
+/* Wadah untuk menu di tengah */
+.menu-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    text-align: center;
+    padding: 20px;
+}
+
+/* Bagian Judul */
+.title-section {
+    margin-bottom: 50px;
+}
+
+/* TAMBAHKAN BLOK BARU INI */
+.game-title-image {
+    width: 90%; /* Lebar gambar 90% dari container */
+    max-width: 600px; /* Lebar maksimal 600px agar tidak terlalu besar di layar PC */
+    height: auto; /* Tinggi otomatis menyesuaikan lebar */
+    margin-bottom: -80px; /* Mengurangi jarak ke tulisan "by Umaedi Valencia" */
+}
+
+.subtitle {
+    font-size: 1.5rem;
+    font-weight: 300;
+    margin-top: 15px;
+    letter-spacing: 2px;
+    opacity: 0.9;
+}
+
+/* Wadah Tombol */
+.button-container {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    width: 100%;
+    max-width: 300px;
+}
+
+/* Gaya Tombol */
+.game-button {
+    background: rgba(195, 0, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    color: white;
+    padding: 15px 20px;
+    text-decoration: none;
+    font-size: 1.1rem;
+    font-weight: 600;
+    border-radius: 50px; /* Membuat tombol menjadi lonjong */
+    cursor: pointer;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(5px); /* Efek glassmorphism */
+    -webkit-backdrop-filter: blur(5px);
+}
+
+.game-button:hover {
+    background: rgba(255, 105, 180, 0.8); /* Warna pink saat hover */
+    border-color: rgba(255, 105, 180, 1);
+    transform: scale(1.05); /* Sedikit membesar saat disentuh */
+    box-shadow: 0 0 20px rgba(255, 105, 180, 0.5);
+}
+
+/* ================== GAYA BARU UNTUK TOMBOL FEEDBACK ================== */
+
+/* Wadah untuk tombol feedback, sekarang berada di alur normal */
+.support-container {
+    margin-top: 40px; /* Memberi jarak dari tombol game di atasnya */
+    width: 100%;
+    max-width: 300px; /* Samakan lebar dengan tombol game agar rapi */
+}
+
+.support-btn {
+    display: block; /* Membuatnya jadi satu baris penuh */
+    width: 100%; /* Lebar penuh sesuai container */
+    padding: 12px 20px; /* Ukuran padding dalam tombol */
+    background-color: rgba(45, 52, 54, 0.6); /* Warna abu-abu gelap transparan, BEDA dari tombol utama */
+    color: #dfe6e9;
+    text-decoration: none;
+    font-size: 1.1rem;
+    font-weight: 600;
+    border-radius: 10px; /* Tidak lagi bulat, tapi sudutnya tumpul */
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    text-align: center;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(5px);
+}
+
+.support-btn:hover {
+    background-color: rgba(99, 110, 114, 0.7); /* Efek hover yang berbeda */
+    border-color: rgba(255, 255, 255, 0.5);
+    transform: scale(1.03); /* Sedikit membesar */
+}

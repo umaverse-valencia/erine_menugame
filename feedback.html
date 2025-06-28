@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Feedback - Game Collection</title>
+    <link rel="stylesheet" href="style_feedback.css">
+</head>
+<body>
+    <div class="form-container">
+        <h1>Feedback & Laporan</h1>
+        <p>Punya saran atau menemukan bug? Beri tahu kami!</p>
+
+        <form id="feedback-form">
+            <div class="input-group">
+                <label for="nama">Nama Kamu</label>
+                <input type="text" id="nama" placeholder="Tulis namamu..." required>
+            </div>
+
+            <div class="input-group">
+                <label for="pesan">Masalah atau Saran</label>
+                <textarea id="pesan" rows="6" placeholder="Jelaskan masalah atau saranmu di sini..." required></textarea>
+            </div>
+
+            <button type="submit" class="kirim-btn">Kirim via WhatsApp</button>
+            <a href="index.html" class="kembali-btn">Kembali ke Menu</a>
+        </form>
+    </div>
+
+    <script src="script_feedback.js"></script>
+</body>
+</html>
