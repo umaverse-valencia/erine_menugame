@@ -145,10 +145,10 @@ body {
 /* GAYA UNTUK KREDIT DI BAGIAN BAWAH */
 .footer-credit {
     position: fixed; /* Membuat posisinya tetap di layar */
-    bottom: 0px;    /* Jarak 10px dari bawah */
+    bottom: 2px;    /* Jarak 10px dari bawah */
     width: 100%;     /* Lebar penuh */
     text-align: center; /* Teks di tengah */
-    font-size: 0.7rem;  /* Ukuran font kecil */
+    font-size: 0.8rem;  /* Ukuran font kecil */
     color: white;       /* Warna teks putih */
     opacity: 0.6;       /* Sedikit transparan agar tidak terlalu mencolok */
     pointer-events: none; /* Agar tidak bisa diklik atau mengganggu elemen lain */
