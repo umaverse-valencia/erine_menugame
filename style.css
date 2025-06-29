@@ -80,7 +80,7 @@ body {
 .button-container {
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: 17px;
     width: 100%;
     max-width: 300px;
     margin-bottom: 60px;
