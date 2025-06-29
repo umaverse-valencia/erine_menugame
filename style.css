@@ -53,7 +53,11 @@ body {
 
 /* Bagian Judul */
 .title-section {
-    margin-bottom: 50px;
+    margin-bottom: 40px;
+}
+
+.nama_pembuat {
+    margin-top: 20px;
 }
 
 /* TAMBAHKAN BLOK BARU INI */
@@ -79,6 +83,7 @@ body {
     gap: 20px;
     width: 100%;
     max-width: 300px;
+    margin-bottom: 60px;
 }
 
 /* Gaya Tombol */
@@ -108,9 +113,9 @@ body {
 
 /* Wadah untuk tombol feedback, sekarang berada di alur normal */
 .support-container {
-    margin-top: 40px; /* Memberi jarak dari tombol game di atasnya */
+    margin-top: -40px; /* Memberi jarak dari tombol game di atasnya */
     width: 100%;
-    max-width: 300px; /* Samakan lebar dengan tombol game agar rapi */
+    max-width: 250px; /* Samakan lebar dengan tombol game agar rapi */
 }
 
 .support-btn {
@@ -133,4 +138,18 @@ body {
     background-color: rgba(99, 110, 114, 0.7); /* Efek hover yang berbeda */
     border-color: rgba(255, 255, 255, 0.5);
     transform: scale(1.03); /* Sedikit membesar */
+}
+
+/* ... (kode CSS Anda yang sudah ada) ... */
+
+/* GAYA UNTUK KREDIT DI BAGIAN BAWAH */
+.footer-credit {
+    position: fixed; /* Membuat posisinya tetap di layar */
+    bottom: 2px;    /* Jarak 10px dari bawah */
+    width: 100%;     /* Lebar penuh */
+    text-align: center; /* Teks di tengah */
+    font-size: 0.9rem;  /* Ukuran font kecil */
+    color: white;       /* Warna teks putih */
+    opacity: 0.6;       /* Sedikit transparan agar tidak terlalu mencolok */
+    pointer-events: none; /* Agar tidak bisa diklik atau mengganggu elemen lain */
 }

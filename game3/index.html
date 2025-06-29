@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Erine's Memory Stage</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <video autoplay muted loop playsinline id="background-video">
+        <source src="background.mp4" type="video/mp4">
+    </video>
+
+    <div id="game-container">
+        <h1>Erine's Memory Stage</h1>
+        <div id="game-board"></div>
+        <div id="ui-container">
+            <p>Percobaan: <span id="tries">0</span></p>
+            <button id="restart-button">Mulai Ulang</button>
+        </div>
+    </div>
+
+    <div id="win-screen" class="overlay-screen hidden">
+        <div class="overlay-content">
+            <h2>🎉 Kamu Menang! 🎉</h2>
+            <p>Selesai dalam <span id="win-tries"></span> percobaan!</p>
+            <div class="win-buttons-container">
+                <button id="play-again-button">Main Lagi</button>
+                <a href="../index.html" class="menu-button">Kembali ke Menu</a>
+            </div>
+        </div>
+    </div>
+
+    <audio id="correct-sound" src="correct.mp3"></audio>
+    <img id="flying-duck" src="duck.png" alt="Bebek Terbang" class="flying-duck-animation">
+    
+    <script src="script.js"></script>
+</body>
+</html>

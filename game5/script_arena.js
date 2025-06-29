@@ -140,7 +140,16 @@ function handleTouchStart(e) { e.preventDefault(); if (joystick) joystick.isPres
 function handleTouchMove(e) { e.preventDefault(); if (!joystick || !joystick.isPressed) return; const touch = e.touches ? e.touches[0] : e; const dx = touch.clientX - joystick.baseX; const dy = touch.clientY - joystick.baseY; joystick.angle = Math.atan2(dy, dx); const distance = Math.min(joystick.baseRadius - joystick.knobRadius, Math.hypot(dx, dy)); joystick.knobX = joystick.baseX + Math.cos(joystick.angle) * distance; joystick.knobY = joystick.baseY + Math.sin(joystick.angle) * distance; }
 function handleTouchEnd(e) { e.preventDefault(); if (joystick.isPressed) { triggerPlayerAnimation(); } if (joystick) { joystick.isPressed = false; joystick.knobX = joystick.baseX; joystick.knobY = joystick.baseY; } }
 canvas.addEventListener('mousedown', handleTouchStart, { passive: false }); canvas.addEventListener('touchstart', handleTouchStart, { passive: false }); canvas.addEventListener('mousemove', handleTouchMove, { passive: false }); canvas.addEventListener('touchmove', handleTouchMove, { passive: false });
-window.addEventListener('mouseup', () => { if (joystick.isPressed) { triggerPlayerAnimation(); } joystick.isPressed = false; joystick.knobX = joystick.baseX; joystick.knobY = joystick.baseY; });
+window.addEventListener('mouseup', () => {
+  if (!joystick) return; // jika joystick belum diatur, hentikan
+
+  if (joystick.isPressed) {
+    triggerPlayerAnimation();
+  }
+  joystick.isPressed = false;
+  joystick.knobX = joystick.baseX;
+  joystick.knobY = joystick.baseY;
+});
 window.addEventListener('touchend', handleTouchEnd);
 window.addEventListener('resize', () => { canvas.width = window.innerWidth; canvas.height = window.innerHeight; if (gameScreen && !gameScreen.classList.contains('hidden')) { initGame(); } });
 startButton.addEventListener('click', startGame); startButton.addEventListener('touchstart', startGame); restartButton.addEventListener('click', restartGame); restartButton.addEventListener('touchstart', restartGame); menuButton.addEventListener('click', backToMenu); menuButton.addEventListener('touchstart', backToMenu);
