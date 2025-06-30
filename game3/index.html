@@ -2,9 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    
     <title>Erine's Memory Stage</title>
     <link rel="stylesheet" href="style.css">
 </head>
@@ -13,7 +11,18 @@
         <source src="background.mp4" type="video/mp4">
     </video>
 
-    <div id="game-container">
+    <div id="level-screen" class="overlay-screen">
+        <div class="overlay-content">
+            <h2>Pilih Level Kesulitan</h2>
+            <div class="level-buttons-container">
+                <button class="level-button" data-level="easy">Mudah (4x3)</button>
+                <button class="level-button" data-level="medium">Sedang (4x4)</button>
+                <button class="level-button" data-level="hard">Sulit (5x4)</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="game-container" class="hidden">
         <h1>Erine's Memory Stage</h1>
         <div id="game-board"></div>
         <div id="ui-container">
