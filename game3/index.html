@@ -26,7 +26,10 @@
         <h1>Erine's Memory Stage</h1>
         <div id="game-board"></div>
         <div id="ui-container">
-            <p>Percobaan: <span id="tries">0</span></p>
+            <div class="score-stats">
+                <p>Percobaan: <span id="tries">0</span></p>
+                <p>Terbaik: <span id="current-highscore">N/A</span></p>
+            </div>
             <button id="restart-button">Mulai Ulang</button>
         </div>
     </div>
@@ -44,6 +47,7 @@
 
     <audio id="correct-sound" src="correct.mp3"></audio>
     <img id="flying-duck" src="duck.png" alt="Bebek Terbang" class="flying-duck-animation">
+    <div id="particle-container"></div>
     
     <script src="script.js"></script>
 </body>
