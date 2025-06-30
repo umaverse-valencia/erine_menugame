@@ -22,7 +22,7 @@ body {
 
 .hidden { display: none !important; }
 
-/* --- KONTENER GAME YANG RESPONSIVE (PERBAIKAN UTAMA) --- */
+/* --- KONTENER GAME YANG RESPONSIVE --- */
 #game-container {
     background-color: rgba(26, 26, 46, 0.9);
     padding: 2vw; /* Gunakan unit viewport agar padding fleksibel */
@@ -34,26 +34,16 @@ body {
     max-width: 480px; /* Batas lebar maksimal di layar besar */
 }
 
-p{
-    color: aqua;
-}
-
-h2 {
- font-size: 3vw;
- max-font-size: 2em;
- color: #ff99cc;
- }
+h1 { font-size: 5vw; max-font-size: 2em; color: #ff99cc; }
 
 /* --- PAPAN PERMAINAN & KARTU YANG FLEKSIBEL --- */
 #game-board {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
     gap: 1.5vw; /* Jarak antar kartu fleksibel */
     margin: 20px 0;
 }
 
 .card {
-    /* Gunakan aspect-ratio agar kartu selalu persegi */
     aspect-ratio: 1 / 1;
     cursor: pointer;
     position: relative;
@@ -62,6 +52,7 @@ h2 {
 }
 
 .card.flipped, .card.matched { transform: rotateY(180deg); }
+
 .card-face {
     position: absolute;
     width: 100%;
@@ -72,28 +63,57 @@ h2 {
     align-items: center;
     border-radius: 10px;
 }
-.card-front { background-color: #e94560; font-size: 8vw; }
-.card-back { background-color: #ffcce0; transform: rotateY(180deg); }
-.card-back img { width: 90%; height: 90%; object-fit: cover; border-radius: 5px; }
 
-/* --- Elemen UI Lainnya --- */
-#ui-container { margin-top: 15px; font-size: 1.1em; }
-#restart-button, #play-again-button, .menu-button {
-    padding: 10px 20px;
+.card-front {
+    background-color: #e94560;
+    background-image: url('jkt48_logo_card.png'); /* Logo di belakang kartu */
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+.card-back {
+    background-color: #ffcce0;
+    transform: rotateY(180deg);
+}
+
+.card-back img {
+    width: 90%;
+    height: 90%;
+    object-fit: cover;
+    border-radius: 5px;
+}
+
+/* --- UI Container --- */
+#ui-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 15px;
+    font-size: 1.1em;
+    padding: 0 10px;
+}
+.score-stats {
+    text-align: left;
+}
+#ui-container p {
+    margin: 2px 0;
+}
+
+#restart-button, #play-again-button, .menu-button, .level-button {
+    padding: 12px 25px;
     font-size: 1em;
     border: none;
     border-radius: 8px;
     color: white;
     cursor: pointer;
-    transition: transform 0.2s;
+    transition: transform 0.2s, box-shadow 0.2s;
+    font-family: 'Segoe UI', sans-serif;
 }
-#restart-button { background-color: #ff99cc; }
-#play-again-button { background-color: #e94560; }
-.menu-button { background-color: #6c757d; text-decoration: none; }
-.win-buttons-container { display: flex; justify-content: center; gap: 15px; margin-top: 25px; }
 
+#restart-button { margin: 0; background-color: #ff99cc; }
 
-/* --- Layar Kemenangan --- */
+/* --- Layar Overlay (Untuk Level & Kemenangan) --- */
 .overlay-screen {
     position: fixed;
     top: 0; left: 0;
@@ -103,7 +123,10 @@ h2 {
     justify-content: center;
     align-items: center;
     z-index: 30;
+    padding: 15px;
+    box-sizing: border-box;
 }
+
 .overlay-content {
     background: linear-gradient(145deg, #1a1a2e, #2a2a4e);
     padding: 30px 40px;
@@ -111,65 +134,52 @@ h2 {
     text-align: center;
     border: 2px solid #ff99cc;
     animation: pop-in 0.5s ease-out;
-    width: 90%; max-width: 400px;
+    width: 100%; max-width: 400px;
 }
-.overlay-content h2 { color: #ff99cc; font-size: 2em; }
+
+.overlay-content h2 { color: #ff99cc; font-size: 2em; margin-top: 0; }
+
 @keyframes pop-in { from { transform: scale(0.7); } to { transform: scale(1); } }
 
+/* --- Tombol di Layar Kemenangan & Level --- */
+.win-buttons-container, .level-buttons-container {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-top: 25px;
+}
+.level-buttons-container { flex-direction: column; }
+#play-again-button { background-color: #e94560; }
+.menu-button { background-color: #6c757d; text-decoration: none; }
+.level-button:hover { transform: scale(1.03); }
+.level-button[data-level="easy"] { background-color: #28a745; }
+.level-button[data-level="easy"]:hover { box-shadow: 0 0 15px rgba(40, 167, 69, 0.7); }
+.level-button[data-level="medium"] { background-color: #ffc107; }
+.level-button[data-level="medium"]:hover { box-shadow: 0 0 15px rgba(255, 193, 7, 0.7); }
+.level-button[data-level="hard"] { background-color: #dc3545; }
+.level-button[data-level="hard"]:hover { box-shadow: 0 0 15px rgba(220, 53, 69, 0.7); }
 
-/* --- Animasi Bebek --- */
+/* --- Animasi --- */
+@keyframes shake {
+  0%, 100% { transform: translateX(0) rotateY(180deg); }
+  25% { transform: translateX(-5px) rotateY(180deg); }
+  50% { transform: translateX(5px) rotateY(180deg); }
+  75% { transform: translateX(-5px) rotateY(180deg); }
+}
+.card.shake {
+  animation: shake 0.4s ease-in-out;
+}
+#particle-container {
+    position: absolute; width: 1px; height: 1px;
+    pointer-events: none; z-index: 25;
+}
+.particle {
+    position: absolute; width: 8px; height: 8px;
+    background: #ffcce0; border-radius: 50%;
+}
 .flying-duck-animation { position: absolute; width: 100px; height: auto; z-index: 20; pointer-events: none; opacity: 0; transform: scale(0); }
 .flying-duck-animation.animate { animation: fly-across 1.5s ease-in-out forwards; }
 @keyframes fly-across {
     0% { opacity: 1; transform: translate(0, 0) rotate(0deg) scale(1.2); }
     100% { opacity: 0; transform: translate(300px, -400px) rotate(30deg) scale(0.5); }
 }
-
-/* ... (kode CSS sebelumnya) ... */
-
-/* --- Tombol Level --- */
-.level-buttons-container {
-    display: flex;
-    flex-direction: column; /* Tombol tersusun ke bawah */
-    gap: 15px;
-    width: 100%;
-}
-
-.level-button {
-    padding: 15px 20px;
-    font-size: 1.1em;
-    border: none;
-    border-radius: 8px;
-    color: white;
-    cursor: pointer;
-    transition: transform 0.2s, box-shadow 0.2s;
-    width: 100%;
-}
-
-.level-button:hover {
-    transform: scale(1.03);
-}
-
-/* Beri warna berbeda untuk setiap level */
-.level-button[data-level="easy"] {
-    background-color: #28a745; /* Hijau */
-}
-.level-button[data-level="easy"]:hover {
-    box-shadow: 0 0 15px rgba(40, 167, 69, 0.7);
-}
-
-.level-button[data-level="medium"] {
-    background-color: #ffc107; /* Kuning */
-}
-.level-button[data-level="medium"]:hover {
-    box-shadow: 0 0 15px rgba(255, 193, 7, 0.7);
-}
-
-.level-button[data-level="hard"] {
-    background-color: #dc3545; /* Merah */
-}
-.level-button[data-level="hard"]:hover {
-    box-shadow: 0 0 15px rgba(220, 53, 69, 0.7);
-}
-
-/* ... (sisa kode CSS) ... */
