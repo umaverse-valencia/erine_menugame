@@ -1,22 +1,47 @@
 document.addEventListener('DOMContentLoaded', () => {
     // --- Elemen DOM ---
+    const gameContainer = document.getElementById('game-container');
     const gameBoard = document.getElementById('game-board');
     const triesDisplay = document.getElementById('tries');
     const restartButton = document.getElementById('restart-button');
     const correctSound = document.getElementById('correct-sound');
     const flyingDuck = document.getElementById('flying-duck');
+    
+    // Elemen Layar
+    const levelScreen = document.getElementById('level-screen');
     const winScreen = document.getElementById('win-screen');
     const winTriesDisplay = document.getElementById('win-tries');
     const playAgainButton = document.getElementById('play-again-button');
+    const levelButtons = document.querySelectorAll('.level-button');
 
-    // --- Daftar Gambar Kartu ---
-    const cardImagePaths = ['image1.png', 'image2.png', 'image3.png', 'image4.png', 'image5.png', 'image6.png'];
+    // --- Konfigurasi Level ---
+    const levels = {
+        easy: { pairs: 6, cols: 4 },
+        medium: { pairs: 8, cols: 4 },
+        hard: { pairs: 10, cols: 5 }
+    };
+    let currentLevelConfig;
+
+    // --- Daftar Semua Gambar Kartu ---
+    const allCardImages = [
+        'image1.png', 'image2.png', 'image3.png', 'image4.png', 'image5.png', 
+        'image6.png', 'image7.png', 'image8.png', 'image9.png', 'image10.png'
+    ];
     
-    let cards = [...cardImagePaths, ...cardImagePaths];
+    // --- Variabel Game ---
+    let cards = [];
     let flippedCards = [];
     let matchedPairs = 0;
     let tries = 0;
     let canFlip = true;
+
+    // --- Logika Utama ---
+    function startGame(level) {
+        currentLevelConfig = levels[level];
+        levelScreen.classList.add('hidden');
+        gameContainer.classList.remove('hidden');
+        createBoard();
+    }
 
     function shuffle(array) {
         array.sort(() => Math.random() - 0.5);
@@ -24,9 +49,17 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function createBoard() {
         gameBoard.innerHTML = '';
+        gameBoard.style.gridTemplateColumns = `repeat(${currentLevelConfig.cols}, 1fr)`;
+
+        // Ambil gambar sesuai jumlah pasangan di level ini
+        const imagesForLevel = allCardImages.slice(0, currentLevelConfig.pairs);
+        cards = [...imagesForLevel, ...imagesForLevel];
         shuffle(cards);
+
+        // Reset state
         matchedPairs = 0;
         tries = 0;
+        flippedCards = [];
         triesDisplay.textContent = '0';
         canFlip = true;
         
@@ -79,24 +112,21 @@ document.addEventListener('DOMContentLoaded', () => {
             void flyingDuck.offsetWidth;
             flyingDuck.classList.add('animate');
             
-            resetFlippedCards();
+            flippedCards = [];
+            canFlip = true;
             checkWin();
         } else {
             setTimeout(() => {
                 card1.classList.remove('flipped');
                 card2.classList.remove('flipped');
-                resetFlippedCards();
-            }, 1000);
+                flippedCards = [];
+                canFlip = true;
+            }, 1200);
         }
-    }
-    
-    function resetFlippedCards() {
-        flippedCards = [];
-        canFlip = true;
     }
 
     function checkWin() {
-        if (matchedPairs === cardImagePaths.length) {
+        if (matchedPairs === currentLevelConfig.pairs) {
             setTimeout(() => {
                 winTriesDisplay.textContent = tries;
                 winScreen.classList.remove('hidden');
@@ -104,11 +134,17 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
+    // --- Event Listeners ---
+    levelButtons.forEach(button => {
+        button.addEventListener('click', () => {
+            startGame(button.dataset.level);
+        });
+    });
+
     restartButton.addEventListener('click', createBoard);
     playAgainButton.addEventListener('click', () => {
         winScreen.classList.add('hidden');
+
         createBoard();
     });
-
-    createBoard();
 });
