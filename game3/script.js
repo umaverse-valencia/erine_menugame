@@ -41,9 +41,11 @@ document.addEventListener('DOMContentLoaded', () => {
         currentLevelConfig = levels[level];
         levelScreen.classList.add('hidden');
         gameContainer.classList.remove('hidden');
+
         const highScores = getHighScores();
         const bestScore = highScores[currentLevelConfig.name];
         currentHighscoreDisplay.textContent = bestScore === 999 ? 'N/A' : bestScore;
+        
         createBoard();
     }
 
