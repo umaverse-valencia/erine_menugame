@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Erine's Stage Run</title>
+    <link rel="stylesheet" href="style_run.css">
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <meta name="google" content="notranslate">
+</head>
+<body>
+
+    <div id="game-container">
+        <canvas id="game-canvas" width="600" height="200"></canvas>
+        <div id="loading-screen">
+            <p>Memuat Aset Game...</p>
+        </div>
+        <div id="game-over-panel" class="hidden">
+            <h2>Game Over</h2>
+            <p>Skor Akhir: <span id="final-score">0</span></p>
+            <button id="restart-button">Coba Lagi</button>
+        </div>
+        <div id="score-board">SKOR: 0</div>
+        <div id="high-score-board">TERBAIK: 0</div>
+    </div>
+
+    <div id="controls">
+        <button id="jump-button">LOMPAT</button>
+        <button id="duck-button">TUNDUK</button>
+    </div>
+    <audio id="background-music" src="music.mp3" loop></audio>
+    <button id="music-toggle-button">🎵</button>
+    <script src="script_run.js"></script>
+</body>
+</html>

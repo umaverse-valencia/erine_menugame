@@ -1,152 +1,203 @@
-// KODE FINAL - HANYA ANGKA LOADING
-
-// --- ELEMEN DOM ---
-const loadingScreen = document.getElementById('loading-screen');
-const quoteText = document.getElementById('quote-text');
-const loadingPercentage = document.getElementById('loading-percentage');
-const gameContainer = document.getElementById('game-container');
+const backgroundMusic = document.getElementById('background-music');
+const musicToggleButton = document.getElementById('music-toggle-button');
 const canvas = document.getElementById('game-canvas');
-// ... sisa elemen DOM tidak berubah ...
 const ctx = canvas.getContext('2d');
-const startMessage = document.getElementById('start-message');
-const scoreDisplay = document.getElementById('score-display');
-const highScoreDisplay = document.getElementById('high-score-display');
-const gameOverScreen = document.getElementById('game-over-screen');
-const finalScoreElement = document.getElementById('final-score');
-const newHighScoreMsg = document.getElementById('new-high-score-msg');
-const leftControlButton = document.getElementById('left-control');
-const rightControlButton = document.getElementById('right-control');
-const menuButton = document.getElementById('menu-button');
+const scoreBoard = document.getElementById('score-board');
+const highScoreBoard = document.getElementById('high-score-board');
+const loadingScreen = document.getElementById('loading-screen');
+const gameOverPanel = document.getElementById('game-over-panel');
+const finalScore = document.getElementById('final-score');
+const restartButton = document.getElementById('restart-button');
+const jumpButton = document.getElementById('jump-button');
+const duckButton = document.getElementById('duck-button');
 
-// --- PENGATURAN CANVAS ---
-canvas.width = window.innerWidth;
-canvas.height = window.innerHeight;
-
-// --- KATA-KATA ERINE ---
-const erineQuotes = [
-    "Jangan menyerah ya, di depan ada panggung yang cerah menantimu!",
-    "Lari sekuat tenaga! Tunjukkan semangatmu yang penuh warna!",
-    "Setiap langkah berarti, teruslah maju jadi nomor satu!",
-    "Kalau lelah, ingat lagi alasan kamu memulai. Semangat!",
-    "Lihat aku! Aku akan jadi kupu-kupu yang terbang tinggi!"
+// --- Pemuatan Aset Gambar ---
+let assets = {};
+let assetsLoaded = 0;
+const assetFiles = [
+    { name: 'background1', src: 'background1.png' },
+    { name: 'background2', src: 'background2.png' },
+    { name: 'run_sprite', src: 'erine_run_sprite.png' },
+    { name: 'jump', src: 'erine_jump.png' },
+    { name: 'duck', src: 'erine_duck.png' },
+    { name: 'obstacle1', src: 'obstacle_1.png' },
+    { name: 'obstacle2', src: 'obstacle_2.png' }
 ];
-let quoteInterval;
 
-// --- MANAJEMEN ASET ---
-const assetSources = [
-    'erine_icon.png', 'erine_run.png', 'erine_jump.png', 'erine_duck.png',
-    'obstacle_kabel.png', 'obstacle_drone.png', 'background1.png', 'background2.png'
-];
-const assets = {};
-
-// --- FUNGSI LOADING BARU YANG LEBIH BAIK ---
-function startLoading() {
-    let assetsLoaded = 0;
-    const totalAssets = assetSources.length;
-    let minTimeElapsed = false;
-    let allAssetsLoaded = false;
-
-    quoteText.textContent = `"${erineQuotes[0]}"`;
-    quoteInterval = setInterval(() => {
-        const randomIndex = Math.floor(Math.random() * erineQuotes.length);
-        quoteText.textContent = `"${erineQuotes[randomIndex]}"`;
-    }, 4000);
-    
-    setTimeout(() => {
-        minTimeElapsed = true;
-        tryStartGame();
-    }, 2000);
-
-    if (totalAssets === 0) {
-        allAssetsLoaded = true;
-        tryStartGame();
-        return;
-    }
-
-    const assetPromises = assetSources.map(src => {
-        return new Promise((resolve, reject) => {
-            const img = new Image();
-            img.src = src;
-            assets[src.split('.')[0]] = img;
-            img.onload = () => {
-                assetsLoaded++;
-                const progress = (assetsLoaded / totalAssets) * 100;
-                loadingPercentage.textContent = `${Math.round(progress)}%`;
-                if (assetsLoaded >= totalAssets) {
-                    allAssetsLoaded = true;
-                    tryStartGame();
-                }
-                resolve();
-            };
-            img.onerror = () => {
-                console.error(`Gagal memuat aset: ${src}`);
-                assetsLoaded++;
-                if (assetsLoaded >= totalAssets) {
-                    allAssetsLoaded = true;
-                    tryStartGame();
-                }
-                reject(`Gagal memuat ${src}`);
-            };
-        });
-    });
-
-    function tryStartGame() {
-        if (minTimeElapsed && allAssetsLoaded) {
-            clearInterval(quoteInterval);
-            loadingScreen.style.opacity = '0';
+assetFiles.forEach(file => {
+    assets[file.name] = new Image();
+    assets[file.name].onload = () => {
+        assetsLoaded++;
+        if (assetsLoaded === assetFiles.length) {
             setTimeout(() => {
                 loadingScreen.classList.add('hidden');
-                gameContainer.classList.remove('hidden');
-                loadHighScore();
+                Start();
             }, 500);
+        }
+    };
+    assets[file.name].src = file.src;
+});
+
+// --- Variabel Game ---
+let score, highScore, player, gravity, obstacles, gameSpeed, keys = {}, isGameOver;
+let bg1X, bg2X; 
+highScore = localStorage.getItem('erineRunHighScore') || 0;
+
+// --- Kelas-kelas Game ---
+class Player {
+    constructor(x, y, w, h) {
+        this.x = x; this.y = y; this.w = w; this.h = h;
+        this.dy = 0; this.jumpForce = 19;
+        this.originalHeight = h;
+        this.originalWidth = w;
+        this.grounded = false;
+        this.isDucking = false;
+
+        this.spriteWidth = 293.5;
+        this.spriteHeight = 425;
+        this.totalFrames = 2;
+        this.currentFrame = 0;
+        this.animationTimer = 0;
+        this.animationSpeed = 10;
+    }
+
+    Animate() {
+        if (keys['Space'] || keys['KeyW'] || keys['jump']) { this.Jump(); keys['jump'] = false; }
+        
+        // --- LOGIKA BARU UNTUK MENUNDUK ---
+        let wasDucking = this.isDucking;
+        this.isDucking = (keys['ShiftLeft'] || keys['KeyS'] || keys['duck']) && this.grounded;
+
+        // Jika baru mulai menunduk
+        if (this.isDucking && !wasDucking) {
+            this.h = this.originalHeight / 1.5;
+            this.w = this.originalWidth * 1.2; // Sedikit lebih lebar saat menunduk
+            this.y += this.originalHeight - this.h; // Pindahkan posisi Y agar kaki tetap di tanah
+        } 
+        // Jika baru berhenti menunduk
+        else if (!this.isDucking && wasDucking) {
+            this.y -= this.originalHeight - this.h; // Kembalikan posisi Y
+            this.h = this.originalHeight;
+            this.w = this.originalWidth;
+        }
+        // --- AKHIR LOGIKA BARU ---
+
+        this.dy += gravity;
+        this.y += this.dy;
+        if (this.y + this.h >= canvas.height) {
+            this.y = canvas.height - this.h;
+            this.dy = 0;
+            this.grounded = true;
+        }
+        
+        if (this.grounded && !this.isDucking) {
+            this.animationTimer++;
+            if (this.animationTimer % this.animationSpeed === 0) {
+                this.currentFrame = (this.currentFrame + 1) % this.totalFrames;
+            }
+        }
+        
+        this.Draw();
+    }
+
+    Jump() { if (this.grounded) { this.dy = -this.jumpForce; this.grounded = false; } }
+
+    Draw() {
+        let currentImage;
+        if (this.isDucking) {
+            currentImage = assets.duck;
+            ctx.drawImage(currentImage, this.x, this.y, this.w, this.h);
+        } else if (!this.grounded) {
+            currentImage = assets.jump;
+            ctx.drawImage(currentImage, this.x, this.y, this.w, this.h);
+        } else {
+            currentImage = assets.run_sprite;
+            ctx.drawImage(
+                currentImage, this.currentFrame * this.spriteWidth, 0,
+                this.spriteWidth, this.spriteHeight,
+                this.x, this.y, this.w, this.h
+            );
         }
     }
 }
 
-
-// --- LOGIKA GAME ---
-let player, obstacles, gameSpeed, score, highScore = 0, gameOver, isGameStarted = false, backgrounds, obstacleTimer;
-const groundHeight = 50;
-
-// ... sisa kode tidak perlu diubah sama sekali ...
-// Cukup salin dan tempel semua fungsi yang tersisa dari kode sebelumnya ke sini
-// Ini termasuk: initializeGame, loadHighScore, saveHighScore, tryStartGame, jump, duck, backToMenu,
-// update, draw, dan loop, serta event listener di akhir.
-function initializeGame() { player = { x: 100, width: 60, height: 90, dy: 0, gravity: 0.8, jumpPower: -18, isJumping: false, isDucking: false, duckTimer: 0 }; player.y = canvas.height - groundHeight - player.height; obstacles = []; gameSpeed = 5; score = 0; gameOver = false; isGameStarted = true; startMessage.classList.add('hidden'); gameOverScreen.classList.add('hidden'); obstacleTimer = 100; backgrounds = [ { img: assets.background1, x: 0, y: 0 }, { img: assets.background2, x: canvas.width, y: 0 }]; loadHighScore(); loop(); }
-function loadHighScore() { highScore = parseInt(localStorage.getItem('erineRunHighScore')) || 0; highScoreDisplay.textContent = highScore; }
-function saveHighScore() { const finalScore = score; if (finalScore > highScore) { highScore = finalScore; localStorage.setItem('erineRunHighScore', highScore); newHighScoreMsg.classList.remove('hidden'); } else { newHighScoreMsg.classList.add('hidden'); } }
-function tryStartGame(e) { if (e && (e.target.id === 'menu-button' || e.target.parentElement.id === 'menu-button')) return; if (gameOver) { initializeGame(); return; } if (!isGameStarted) { initializeGame(); } }
-function jump(e) { if(e) e.preventDefault(); tryStartGame(); if (!player.isJumping) { player.dy = player.jumpPower; player.isJumping = true; } }
-function duck(e) { if(e) e.preventDefault(); tryStartGame(); player.isDucking = true; player.duckTimer = 30; }
-function backToMenu(e) { e.stopPropagation(); window.location.href = '../index.html'; }
-let scoreTimer = 0;
-function update() {
-    if (!isGameStarted || gameOver) return;
-    gameSpeed += 0.001; scoreTimer++; if (scoreTimer % 5 === 0) { score++; }
-    const bgSpeed = gameSpeed * 0.5;
-    backgrounds.forEach(bg => { bg.x -= bgSpeed; if (bg.x <= -canvas.width) { bg.x += canvas.width * 2; } });
-    player.dy += player.gravity; player.y += player.dy;
-    if (player.y >= canvas.height - groundHeight - player.height) { player.y = canvas.height - groundHeight - player.height; player.isJumping = false; player.dy = 0; }
-    if (player.isDucking) { player.duckTimer--; if (player.duckTimer <= 0) { player.isDucking = false; } }
-    obstacles.forEach(obs => { obs.x -= gameSpeed; });
-    obstacles = obstacles.filter(obs => obs.x + obs.width > 0);
-    obstacleTimer--;
-    if (obstacleTimer <= 0) { const lastObstacle = obstacles[obstacles.length - 1]; if (!lastObstacle || lastObstacle.x < canvas.width - (250 + (gameSpeed * 10))) { let type = (lastObstacle && lastObstacle.type === 'kabel') ? 'drone' : 'kabel'; obstacles.push({ x: canvas.width, y: type === 'kabel' ? canvas.height - groundHeight - 30 : canvas.height - groundHeight - 140, width: 50, height: type === 'kabel' ? 30 : 60, type: type }); obstacleTimer = 60 + Math.random() * 40 - (gameSpeed * 2); } }
-    obstacles.forEach(obs => { const playerCurrentHeight = player.isDucking ? player.height / 2 : player.height; const playerCurrentY = player.isDucking ? player.y + (player.height / 2) : player.y; if (player.x < obs.x + obs.width && player.x + player.width > obs.x && playerCurrentY < obs.y + obs.height && playerCurrentY + playerCurrentHeight > obs.y) { gameOver = true; isGameStarted = false; finalScoreElement.textContent = score; saveHighScore(); gameOverScreen.classList.remove('hidden'); } });
-    scoreDisplay.textContent = score;
+// ... Sisa kode (class Obstacle, fungsi-fungsi lain) tidak berubah ...
+class Obstacle {
+    constructor(x, y, w, h, image) { this.x = x; this.y = y; this.w = w; this.h = h; this.image = image; this.dx = -gameSpeed; }
+    Update() { this.x += this.dx; this.Draw(); this.dx = -gameSpeed; }
+    Draw() { ctx.drawImage(this.image, this.x, this.y, this.w, this.h); }
 }
-function draw() {
-    if (!isGameStarted && !gameOver) return;
+function SpawnObstacle() {
+    let width, height; let type = RandomIntInRange(0, 1); let image, yPos;
+    if (type == 0) {
+        image = assets.obstacle1; height = canvas.height * 0.08; width = height * 0.7; yPos = canvas.height - height;
+    } else {
+        image = assets.obstacle2; height = canvas.height * 0.14; width = height; yPos = canvas.height - height - (player.originalHeight * 0.9);
+    }
+    obstacles.push(new Obstacle(canvas.width, yPos, width, height, image));
+}
+function RandomIntInRange(min, max) { return Math.round(Math.random() * (max - min) + min); }
+function Start() {
+    isGameOver = false; canvas.width = canvas.clientWidth; canvas.height = canvas.clientHeight;
+    gameSpeed = 7; gravity = 1; score = 0;
+    const playerHeight = canvas.height * 0.16; const playerWidth = playerHeight * 0.8; 
+    player = new Player(25, canvas.height - playerHeight, playerWidth, playerHeight);
+    obstacles = [];
+    highScoreBoard.textContent = `TERBAIK: ${highScore}`;
+    gameOverPanel.classList.add('hidden');
+    bg1X = 0; bg2X = canvas.width;
+    requestAnimationFrame(Update);
+
+    // Mulai musik saat game dimulai
+    backgroundMusic.play();
+
+    requestAnimationFrame(Update);
+}
+let initialSpawnTimer = 220; let spawnTimer = initialSpawnTimer;
+function Update() {
+    if (isGameOver) return;
+    requestAnimationFrame(Update);
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-    backgrounds.forEach(bg => { if (bg.img.complete) ctx.drawImage(bg.img, bg.x, bg.y, canvas.width, canvas.height); });
-    ctx.fillStyle = '#556B2F'; ctx.fillRect(0, canvas.height - groundHeight, canvas.width, groundHeight);
-    if(isGameStarted && player) { let playerImg = assets.erine_run; if (player.isJumping) playerImg = assets.erine_jump; if (player.isDucking) playerImg = assets.erine_duck; let playerHeight = player.isDucking ? player.height / 1.5 : player.height; let playerY = player.isDucking ? player.y + (player.height - playerHeight) : player.y; if(playerImg && playerImg.complete) ctx.drawImage(playerImg, player.x, playerY, player.width, playerHeight); obstacles.forEach(obs => { const obsImg = obs.type === 'kabel' ? assets.obstacle_kabel : assets.obstacle_drone; if (obsImg && obsImg.complete) ctx.drawImage(obsImg, obs.x, obs.y, obs.width, obs.height); }); }
+    bg1X -= gameSpeed / 2; bg2X -= gameSpeed / 2;
+    if (bg1X <= -canvas.width) { bg1X = bg2X + canvas.width; }
+    if (bg2X <= -canvas.width) { bg2X = bg1X + canvas.width; }
+    ctx.drawImage(assets.background1, bg1X, 0, canvas.width, canvas.height);
+    ctx.drawImage(assets.background2, bg2X, 0, canvas.width, canvas.height);
+    spawnTimer--;
+    if (spawnTimer <= 0) { SpawnObstacle(); spawnTimer = initialSpawnTimer - (gameSpeed * 8); if (spawnTimer < 50) spawnTimer = 50; }
+    for (let i = obstacles.length - 1; i >= 0; i--) {
+        let o = obstacles[i];
+        if (o.x + o.w < 0) { obstacles.splice(i, 1); }
+        if (player.x < o.x + o.w && player.x + player.w > o.x && player.y < o.y + o.h && player.y + player.h > o.y) { GameOver(); }
+        o.Update();
+    }
+    player.Animate();
+    score++;
+    scoreBoard.textContent = `SKOR: ${score}`;
+    gameSpeed += 0.002;
 }
-function loop() { if (gameOver) return; update(); draw(); requestAnimationFrame(loop); }
-rightControlButton.addEventListener('click', jump); rightControlButton.addEventListener('touchstart', jump);
-leftControlButton.addEventListener('click', duck); leftControlButton.addEventListener('touchstart', duck);
-gameContainer.addEventListener('click', tryStartGame); gameContainer.addEventListener('touchstart', tryStartGame);
-menuButton.addEventListener('click', backToMenu); menuButton.addEventListener('touchstart', backToMenu);
-
-// --- MULAI PROSES PEMUATAN ---
-document.addEventListener('DOMContentLoaded', startLoading);
+function GameOver() {
+    isGameOver = true;
+    if (score > highScore) { highScore = score; localStorage.setItem('erineRunHighScore', highScore); }
+    finalScore.textContent = score;
+    highScoreBoard.textContent = `TERBAIK: ${highScore}`;
+    gameOverPanel.classList.remove('hidden');
+}
+document.addEventListener('keydown', e => keys[e.code] = true);
+document.addEventListener('keyup', e => keys[e.code] = false);
+jumpButton.addEventListener('pointerdown', () => keys['jump'] = true);
+jumpButton.addEventListener('pointerup', () => keys['jump'] = false);
+duckButton.addEventListener('pointerdown', () => keys['duck'] = true);
+duckButton.addEventListener('pointerup', () => keys['duck'] = false);
+restartButton.addEventListener('click', Start);
+let isMusicPlaying = true;
+musicToggleButton.addEventListener('click', () => {
+    if (isMusicPlaying) {
+        backgroundMusic.pause();
+        musicToggleButton.textContent = '🔇';
+    } else {
+        backgroundMusic.play();
+        musicToggleButton.textContent = '🎵';
+    }
+    isMusicPlaying = !isMusicPlaying;
+});
