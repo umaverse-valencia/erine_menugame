@@ -1,4 +1,4 @@
-/* --- Pengaturan Dasar & Latar Belakang --- */
+/* --- Pengaturan Dasar --- */
 body {
     margin: 0;
     font-family: 'Segoe UI', sans-serif;
@@ -7,169 +7,125 @@ body {
     align-items: center;
     height: 100vh;
     overflow: hidden;
-    background-color: #1a1a2e; /* Warna cadangan jika video gagal */
-}
-
-#background-video {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    min-width: 100%;
-    min-height: 100%;
-    z-index: -1;
-    transform: translateX(-50%) translateY(-50%);
+    background-color: #000;
 }
 
 .hidden { display: none !important; }
 
-/* --- KONTENER GAME YANG RESPONSIVE (PERBAIKAN UTAMA) --- */
+/* --- Latar Belakang Video --- */
+#background-video {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* Pastikan video menutupi layar */
+    z-index: -1; /* PENTING: letakkan di paling belakang */
+}
+
+/* --- KONTENER GAME --- */
 #game-container {
     background-color: rgba(26, 26, 46, 0.9);
-    padding: 2vw; /* Gunakan unit viewport agar padding fleksibel */
+    padding: 15px;
     border-radius: 15px;
     box-shadow: 0 0 20px rgba(233, 69, 96, 0.5);
     text-align: center;
     color: white;
-    width: 95%; /* Lebar relatif terhadap layar */
-    max-width: 480px; /* Batas lebar maksimal di layar besar */
+    width: 90vw;
+    max-width: 450px;
+    box-sizing: border-box;
 }
 
-p{
-    color: aqua;
-}
+h1 { font-size: 1.8em; color: #ff99cc; margin: 0 0 15px 0; }
 
-h2 {
- font-size: 3vw;
- max-font-size: 2em;
- color: #ff99cc;
- }
-
-/* --- PAPAN PERMAINAN & KARTU YANG FLEKSIBEL --- */
+/* --- PAPAN PERMAINAN --- */
 #game-board {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 1.5vw; /* Jarak antar kartu fleksibel */
-    margin: 20px 0;
+    gap: 10px;
+    margin-bottom: 15px;
 }
 
 .card {
-    /* Gunakan aspect-ratio agar kartu selalu persegi */
     aspect-ratio: 1 / 1;
     cursor: pointer;
     position: relative;
     transform-style: preserve-3d;
     transition: transform 0.6s;
 }
-
 .card.flipped, .card.matched { transform: rotateY(180deg); }
 .card-face {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    backface-visibility: hidden;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    position: absolute; width: 100%; height: 100%;
+    backface-visibility: hidden; display: flex;
+    justify-content: center; align-items: center;
     border-radius: 10px;
 }
-.card-front { background-color: #e94560; font-size: 8vw; }
+
+.card-front {
+    background-color: #e94560; /* Warna dasar jika gambar gagal dimuat */
+    background-image: url('jkt48_logo_card.png'); /* Pastikan nama file ini benar */
+    background-size: cover; /* Membuat gambar menutupi seluruh area kartu */
+    background-position: center; /* Posisikan gambar di tengah */
+    background-repeat: no-repeat; /* Jangan ulangi gambar */
+}
+
 .card-back { background-color: #ffcce0; transform: rotateY(180deg); }
 .card-back img { width: 90%; height: 90%; object-fit: cover; border-radius: 5px; }
 
-/* --- Elemen UI Lainnya --- */
-#ui-container { margin-top: 15px; font-size: 1.1em; }
-#restart-button, #play-again-button, .menu-button {
+/* --- UI BAWAH --- */
+#ui-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 1.1em;
+}
+.score-stats { text-align: left; }
+#ui-container p { margin: 2px 0; }
+
+/* --- TOMBOL-TOMBOL --- */
+#restart-button, #play-again-button, .menu-button, .level-button {
     padding: 10px 20px;
     font-size: 1em;
     border: none;
     border-radius: 8px;
     color: white;
     cursor: pointer;
-    transition: transform 0.2s;
+    font-family: 'Segoe UI', sans-serif;
 }
 #restart-button { background-color: #ff99cc; }
-#play-again-button { background-color: #e94560; }
-.menu-button { background-color: #6c757d; text-decoration: none; }
-.win-buttons-container { display: flex; justify-content: center; gap: 15px; margin-top: 25px; }
 
-
-/* --- Layar Kemenangan --- */
+/* --- LAYAR OVERLAY --- */
 .overlay-screen {
-    position: fixed;
-    top: 0; left: 0;
-    width: 100%; height: 100%;
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
     background-color: rgba(0, 0, 0, 0.75);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 30;
+    display: flex; justify-content: center; align-items: center;
+    z-index: 30; padding: 15px; box-sizing: border-box;
 }
 .overlay-content {
     background: linear-gradient(145deg, #1a1a2e, #2a2a4e);
-    padding: 30px 40px;
-    border-radius: 20px;
-    text-align: center;
-    border: 2px solid #ff99cc;
-    animation: pop-in 0.5s ease-out;
-    width: 90%; max-width: 400px;
+    padding: 30px;
+    border-radius: 20px; text-align: center;
+    border: 2px solid #ff99cc; width: 100%; max-width: 400px;
 }
-.overlay-content h2 { color: #ff99cc; font-size: 2em; }
-@keyframes pop-in { from { transform: scale(0.7); } to { transform: scale(1); } }
+.overlay-content h2 { color: #ff99cc; font-size: 2em; margin: 0 0 15px 0; }
+.win-buttons-container, .level-buttons-container { display: flex; gap: 15px; margin-top: 25px; }
+.level-buttons-container { flex-direction: column; }
+#play-again-button { background-color: #e94560; flex-grow: 1; }
+.menu-button { background-color: #6c757d; text-decoration: none; flex-grow: 1; }
+.level-button[data-level="easy"] { background-color: #28a745; }
+.level-button[data-level="medium"] { background-color: #ffc107; }
+.level-button[data-level="hard"] { background-color: #dc3545; }
 
-
-/* --- Animasi Bebek --- */
-.flying-duck-animation { position: absolute; width: 100px; height: auto; z-index: 20; pointer-events: none; opacity: 0; transform: scale(0); }
-.flying-duck-animation.animate { animation: fly-across 1.5s ease-in-out forwards; }
+/* --- ANIMASI --- */
+.card.shake { animation: shake 0.4s ease-in-out; }
+@keyframes shake {
+  25% { transform: translateX(-5px) rotateY(180deg); }
+  75% { transform: translateX(5px) rotateY(180deg); }
+}
+#particle-container { position: absolute; pointer-events: none; z-index: 25; }
+.particle { position: absolute; width: 8px; height: 8px; background: #ffcce0; border-radius: 50%; }
+.flying-duck-animation { position: absolute; width: 100px; z-index: 20; pointer-events: none; opacity: 0; }
+.flying-duck-animation.animate { animation: fly-across 1.5s ease-in-out; }
 @keyframes fly-across {
-    0% { opacity: 1; transform: translate(0, 0) rotate(0deg) scale(1.2); }
-    100% { opacity: 0; transform: translate(300px, -400px) rotate(30deg) scale(0.5); }
+    0% { opacity: 1; transform: translate(0, 0) scale(1.2); }
+    100% { opacity: 0; transform: translate(300px, -400px) scale(0.5); }
 }
-
-/* ... (kode CSS sebelumnya) ... */
-
-/* --- Tombol Level --- */
-.level-buttons-container {
-    display: flex;
-    flex-direction: column; /* Tombol tersusun ke bawah */
-    gap: 15px;
-    width: 100%;
-}
-
-.level-button {
-    padding: 15px 20px;
-    font-size: 1.1em;
-    border: none;
-    border-radius: 8px;
-    color: white;
-    cursor: pointer;
-    transition: transform 0.2s, box-shadow 0.2s;
-    width: 100%;
-}
-
-.level-button:hover {
-    transform: scale(1.03);
-}
-
-/* Beri warna berbeda untuk setiap level */
-.level-button[data-level="easy"] {
-    background-color: #28a745; /* Hijau */
-}
-.level-button[data-level="easy"]:hover {
-    box-shadow: 0 0 15px rgba(40, 167, 69, 0.7);
-}
-
-.level-button[data-level="medium"] {
-    background-color: #ffc107; /* Kuning */
-}
-.level-button[data-level="medium"]:hover {
-    box-shadow: 0 0 15px rgba(255, 193, 7, 0.7);
-}
-
-.level-button[data-level="hard"] {
-    background-color: #dc3545; /* Merah */
-}
-.level-button[data-level="hard"]:hover {
-    box-shadow: 0 0 15px rgba(220, 53, 69, 0.7);
-}
-
-/* ... (sisa kode CSS) ... */
