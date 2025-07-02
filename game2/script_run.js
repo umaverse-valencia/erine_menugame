@@ -58,7 +58,7 @@ class Player {
         this.totalFrames = 2;
         this.currentFrame = 0;
         this.animationTimer = 0;
-        this.animationSpeed = 10;
+        this.animationSpeed = 15;
     }
 
     Animate() {
@@ -139,7 +139,7 @@ function SpawnObstacle() {
 function RandomIntInRange(min, max) { return Math.round(Math.random() * (max - min) + min); }
 function Start() {
     isGameOver = false; canvas.width = canvas.clientWidth; canvas.height = canvas.clientHeight;
-    gameSpeed = 7; gravity = 1; score = 0;
+    gameSpeed = 5; gravity = 1; score = 0;
     const playerHeight = canvas.height * 0.16; const playerWidth = playerHeight * 0.8; 
     player = new Player(25, canvas.height - playerHeight, playerWidth, playerHeight);
     obstacles = [];
